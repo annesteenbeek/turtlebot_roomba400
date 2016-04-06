@@ -55,6 +55,7 @@ import traceback
 import rospy
 
 
+
 ROOMBA_OPCODES = dict(
     start = 128,
     baud = 129,
@@ -282,12 +283,13 @@ class Roomba(object):
 
   """Represents a Roomba robot."""
 
-  def __init__(self):
+  def __init__(self, sensor_state):
     self.tty = None
     self.sci = None
     self.safe = True
+    self.msg = sensor_state # sensor messages
 
-  def start(self, tty='/dev/ttyUSB0', baudrate=57600):
+  def start(self, tty='/dev/ttyACM0', baudrate=57600):
     self.tty = tty
     self.sci = SerialCommandInterface(tty, baudrate)
     self.sci.add_opcodes(ROOMBA_OPCODES)
@@ -343,7 +345,11 @@ class Roomba(object):
             self.turn_in_place(velocity, 'ccw')
     else:
         radius = WHEEL_SEPARATION * (v_left + v_right)/(2*(v_right - v_left))
+        self.msg.requested_radius = float(radius) / 1000
         self.drive(velocity, radius)
+    self.msg.requested_velocity = float(velocity) / 1000
+    self.msg.requested_right_velocity = float(v_right) / 1000
+    self.msg.requested_left_velocity = float(v_left) / 1000 
     
   def drive(self, velocity, radius):
     """controls Roomba's drive wheels.
@@ -414,11 +420,11 @@ class Turtlebot(Roomba):
 
   """Represents a Turtlebot robot."""
 
-  def __init__(self):
+  def __init__(self, sensor_state):
     """
     @param sensor_class: Sensor class to use for fetching and decoding sensor data.
     """
-    super(Turtlebot, self).__init__()
+    super(Turtlebot, self).__init__(sensor_state)
     
   def start(self, tty='/dev/ttyUSB0', baudrate=57600):
     super(Turtlebot, self).start(tty, baudrate)

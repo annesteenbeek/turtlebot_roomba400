@@ -90,10 +90,10 @@ class TurtlebotNode(object):
         self.default_port = default_port
         self.default_update_rate = default_update_rate
 
-        self.robot = Turtlebot()
         self.sensor_handler = None
         self.sensor_state = TurtlebotSensorState()
         self.req_cmd_vel = None
+        self.robot = Turtlebot(self.sensor_state)
 
         rospy.init_node('turtlebot')
         self._init_params()
