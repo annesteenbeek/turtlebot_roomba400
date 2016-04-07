@@ -75,12 +75,12 @@ class TurtlebotGyro():
             self.cal_offset = sum(self.cal_buffer)/len(self.cal_buffer)
             
     def publish(self, sensor_state, last_time):
-        if self.cal_offset == 0:
-            return
-
         self.imu_pub.publish(self.imu_data)
         self.imu_pub_raw.publish(self.imu_data)
         return # only send phone imu data
+
+        if self.cal_offset == 0:
+            return
 
         current_time = sensor_state.header.stamp
         dt = (current_time - last_time).to_sec()
