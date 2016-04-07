@@ -383,6 +383,7 @@ class Roomba(object):
     # Pack as shorts to get 2 x 2 byte integers. Unpack as 4 bytes to send.
     # TODO(damonkohler): The 4 unpacked bytes will just be repacked later,
     # that seems dumb to me.
+    rospy.loginfo('Sending velocity: %f, radius: %f' % (velocity, radius))
     bytes = struct.unpack('4B', struct.pack('>2H', velocity, radius))
     self.sci.drive(*bytes)
 
