@@ -464,7 +464,7 @@ class TurtlebotNode(object):
         dt = (current_time - last_time).to_sec()
 
         # On startup, Create can report junk readings
-        if abs(sensor_state.distance) > 1.0 or abs(sensor_state.angle) > 1.0:
+        #if abs(sensor_state.distance) > 1.0 or abs(sensor_state.angle) > 1.0:
             # raise Exception("Distance, angle displacement too big, invalid readings from robot. Distance: %.2f, Angle: %.2f" % (sensor_state.distance, sensor_state.angle))
 
         # this is really delta_distance, delta_angle
