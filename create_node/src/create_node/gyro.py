@@ -76,22 +76,27 @@ class TurtlebotGyro():
             self.cal_offset = sum(self.cal_buffer)/len(self.cal_buffer)
             
     def publish(self, sensor_state, last_time):
-        self.imu_data.header.stamp = self.phone_imu.header.stamp
-        self.imu_data.angular_velocity = self.phone_imu.angular_velocity
-        self.imu_data.orientation = self.phone_imu.orientation
+        # self.imu_data.header.stamp = self.phone_imu.header.stamp
+        # self.imu_data.angular_velocity = self.phone_imu.angular_velocity
+        # self.imu_data.orientation = self.phone_imu.orientation
 
-        self.imu_pub.publish(self.imu_data)
-        self.imu_pub_raw.publish(self.imu_data)
-        return # only send phone imu data
+        # self.imu_pub.publish(self.imu_data)
+        # self.imu_pub_raw.publish(self.imu_data)
+        # return # only send phone imu data
 
         if self.cal_offset == 0:
             return
 
-        current_time = sensor_state.header.stamp
+        # current_time = sensor_state.header.stamp
+        current_time = self.phone_imu.header.stamp
+
         dt = (current_time - last_time).to_sec()
         past_orientation = self.orientation
-        self.imu_data.header.stamp =  sensor_state.header.stamp
-        self.imu_data.angular_velocity.z  = (float(sensor_state.user_analog_input)-self.cal_offset)/self.cal_offset*self.gyro_measurement_range*(math.pi/180.0)*self.gyro_scale_correction
+        # self.imu_data.header.stamp =  sensor_state.header.stamp
+        self.imu_data.header.stamp =  self.phone_imu.header.stamp
+
+        # self.imu_data.angular_velocity.z  = (float(sensor_state.user_analog_input)-self.cal_offset)/self.cal_offset*self.gyro_measurement_range*(math.pi/180.0)*self.gyro_scale_correction
+        self.imu_data.angular_velocity.z = self.phone_imu.angular_velocity.z
         #sign change
         self.imu_data.angular_velocity.z = -1.0*self.imu_data.angular_velocity.z
         self.orientation += self.imu_data.angular_velocity.z * dt
