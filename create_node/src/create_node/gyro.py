@@ -54,6 +54,7 @@ class TurtlebotGyro():
         self.imu_pub_raw = rospy.Publisher('imu/raw', sensor_msgs.msg.Imu, queue_size=10)
 
         # subscribe to phone IMU
+        self.phone_imu = self.imu_data # initially copy normal imu
         self.phone_imu_sub = rospy.Subscriber('/phone1/android/imu', sensor_msgs.msg.Imu, self.phone_callback)
 
     def reconfigure(self, config, level): 
@@ -75,6 +76,10 @@ class TurtlebotGyro():
             self.cal_offset = sum(self.cal_buffer)/len(self.cal_buffer)
             
     def publish(self, sensor_state, last_time):
+        self.imu_data.header.stamp = self.phone_imu.header.stamp
+        self.imu_data.angular_velocity = self.phone_imu.angular_velocity
+        self.imu_data.orientation = self.phone_imu.orientation
+
         self.imu_pub.publish(self.imu_data)
         self.imu_pub_raw.publish(self.imu_data)
         return # only send phone imu data
@@ -104,4 +109,4 @@ class TurtlebotGyro():
         self.imu_pub_raw.publish(self.imu_data)
 
     def phone_callback(self, phone_imu):
-        self.imu_data = phone_imu
+        self.phone_imu = phone_imu
