@@ -54,7 +54,7 @@ class TurtlebotGyro():
         self.imu_pub_raw = rospy.Publisher('imu/raw', sensor_msgs.msg.Imu, queue_size=10)
 
         # subscribe to phone IMU
-        self.phone_imu_sub = rospy.Subscriber('/phone1/android/imu', sensor_msgs.msg.Imu, phone_callback)
+        self.phone_imu_sub = rospy.Subscriber('/phone1/android/imu', sensor_msgs.msg.Imu, self.phone_callback)
 
     def reconfigure(self, config, level): 
         self.gyro_measurement_range = config['gyro_measurement_range'] 
@@ -81,7 +81,7 @@ class TurtlebotGyro():
         self.imu_pub.publish(self.imu_data)
         self.imu_pub_raw.publish(self.imu_data)
         return # only send phone imu data
-        
+
         current_time = sensor_state.header.stamp
         dt = (current_time - last_time).to_sec()
         past_orientation = self.orientation
