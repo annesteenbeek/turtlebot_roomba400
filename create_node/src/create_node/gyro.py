@@ -53,6 +53,9 @@ class TurtlebotGyro():
         self.imu_pub = rospy.Publisher('imu/data', sensor_msgs.msg.Imu, queue_size=10)
         self.imu_pub_raw = rospy.Publisher('imu/raw', sensor_msgs.msg.Imu, queue_size=10)
 
+        # subscribe to phone IMU
+        self.phone_imu_sub = rospy.Subscriber('/phone1/android/imu', sensor_msgs.msg.Imu, phone_callback)
+
     def reconfigure(self, config, level): 
         self.gyro_measurement_range = config['gyro_measurement_range'] 
         self.gyro_scale_correction = config['gyro_scale_correction']
@@ -75,6 +78,10 @@ class TurtlebotGyro():
         if self.cal_offset == 0:
             return
 
+        self.imu_pub.publish(self.imu_data)
+        self.imu_pub_raw.publish(self.imu_data)
+        return # only send phone imu data
+
         current_time = sensor_state.header.stamp
         dt = (current_time - last_time).to_sec()
         past_orientation = self.orientation
@@ -84,7 +91,13 @@ class TurtlebotGyro():
         self.imu_data.angular_velocity.z = -1.0*self.imu_data.angular_velocity.z
         self.orientation += self.imu_data.angular_velocity.z * dt
         #print orientation
-        (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w) = PyKDL.Rotation.RotZ(self.orientation).GetQuaternion()
+        (self.imu_data.orientation.x, 
+            self.imu_data.orientation.y,
+            self.imu_data.orientation.z, 
+            self.imu_data.orientation.w) = 
+        PyKDL.Rotation.RotZ(self.orientation).GetQuaternion()
+
+        # publish calculated IMU data
         self.imu_pub.publish(self.imu_data)
 
         self.imu_data.header.stamp =  sensor_state.header.stamp
@@ -94,5 +107,9 @@ class TurtlebotGyro():
         raw_orientation = past_orientation + self.imu_data.angular_velocity.z * dt
         #print orientation
         (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w) = PyKDL.Rotation.RotZ(raw_orientation).GetQuaternion()
+
+        # publish raw imu data
         self.imu_pub_raw.publish(self.imu_data)
 
+    def phone_callback(self, phone_imu):
+        self.imu_data = phone_imu

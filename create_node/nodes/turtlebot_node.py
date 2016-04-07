@@ -148,7 +148,7 @@ class TurtlebotNode(object):
 
 
     def _init_params(self):
-        rospy.set_param('~has_gyro', False)
+        # rospy.set_param('~has_gyro', False)
         self.port = rospy.get_param('~port', self.default_port)
         self.robot_type = rospy.get_param('~robot_type', 'create')
         #self.baudrate = rospy.get_param('~baudrate', self.default_baudrate)
