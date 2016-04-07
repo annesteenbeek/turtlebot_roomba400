@@ -415,7 +415,7 @@ class TurtlebotNode(object):
                 self.req_cmd_vel = None
                 # reset time for timeout
                 last_cmd_vel_time = last_time
-                rospy.loginfo('req_cmd_vel: %f', req_cmd_vel)
+                rospy.loginfo('req_cmd_vel: %s', req_cmd_vel)
 
             else:
                 #zero commands on timeout
