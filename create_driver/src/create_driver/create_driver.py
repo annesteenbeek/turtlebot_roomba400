@@ -315,6 +315,7 @@ class Roomba(object):
   def passive(self):
     """Put the robot in passive mode."""
     self.sci.start()
+    self.msg.oi_mode = 1 # maually set OI mode msg
     time.sleep(0.5)
 
   def control(self):
@@ -323,9 +324,10 @@ class Roomba(object):
     self.sci.control()  # Also puts the Roomba in to safe mode.
     if not self.safe:
       self.sci.full()
+      self.msg.oi_mode = 3 # maually set OI mode msg
     else:
-      # self.sci.safe()
-      self.sci.full() # always place in full mode
+      self.sci.safe()
+      self.msg.oi_mode = 2 # maually set OI mode msg
     time.sleep(0.5)
 
   def direct_drive(self, v_left, v_right):
@@ -432,15 +434,15 @@ class Turtlebot(Roomba):
       
   def control(self):
     """Start the robot's SCI interface and place it in safe or full mode."""
-    logging.info('sending control opcodes.')
     self.passive()
     # set control mode first (send 130)
+    self.sci.control() # for old model, set control mode first
     if self.safe:
-      self.sci.control()
-      # self.sci.safe()
-      self.sci.full() # always place in full mode
+      self.sci.safe()
+      self.msg.oi_mode = 2 
     else:
       self.sci.full()
+      self.msg.oi_mode = 3
     time.sleep(0.5)
 
   def power_low_side_drivers(self, drivers):
