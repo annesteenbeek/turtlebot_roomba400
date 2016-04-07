@@ -347,11 +347,11 @@ class Roomba(object):
             self.turn_in_place(velocity, 'ccw')
     else:
         radius = WHEEL_SEPARATION * (v_left + v_right)/(2*(v_right - v_left))
-        self.msg.requested_radius = float(radius) / 1000
+        self.msg.requested_radius = radius
         self.drive(velocity, radius)
-    self.msg.requested_velocity = 10 #float(velocity) / 1000
-    self.msg.requested_right_velocity = 10 #float(v_right) / 1000
-    self.msg.requested_left_velocity = 10 #float(v_left) / 1000 
+    self.msg.requested_velocity = velocity
+    self.msg.requested_right_velocity = v_right
+    self.msg.requested_left_velocity = v_left 
     
   def drive(self, velocity, radius):
     """controls Roomba's drive wheels.
@@ -376,7 +376,7 @@ class Roomba(object):
     Also see drive_straight and turn_in_place convenience methods.
 
     """
-    rospy.loginfo('Sending velocity: %f, radius: %f' % (velocity, radius))
+    # rospy.loginfo('Sending velocity: %f, radius: %f' % (velocity, radius))
     # Mask integers to 2 bytes.
     velocity = int(velocity) & 0xffff
     radius = int(radius) & 0xffff
