@@ -273,7 +273,7 @@ class SerialCommandInterface(object):
     if name in self.opcodes:
       def send_opcode(*bytes):
         logging.debug('sending opcode %s (nr: %d, bytes: %s)' % (name, self.opcodes[name], bytes))
-        # rospy.loginfo('sending opcode %s (nr: %d, bytes: %s)' % (name, self.opcodes[name], bytes))
+        rospy.loginfo('sending opcode %s (nr: %d, bytes: %s)' % (name, self.opcodes[name], bytes))
         self.send([self.opcodes[name]] + list(bytes))
       return send_opcode
     raise AttributeError
