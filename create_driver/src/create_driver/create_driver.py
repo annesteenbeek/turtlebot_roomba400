@@ -376,6 +376,7 @@ class Roomba(object):
     Also see drive_straight and turn_in_place convenience methods.
 
     """
+    rospy.loginfo('Sending velocity: %f, radius: %f' % (velocity, radius))
     # Mask integers to 2 bytes.
     velocity = int(velocity) & 0xffff
     radius = int(radius) & 0xffff
@@ -383,7 +384,6 @@ class Roomba(object):
     # Pack as shorts to get 2 x 2 byte integers. Unpack as 4 bytes to send.
     # TODO(damonkohler): The 4 unpacked bytes will just be repacked later,
     # that seems dumb to me.
-    rospy.loginfo('Sending velocity: %f, radius: %f' % (velocity, radius))
     bytes = struct.unpack('4B', struct.pack('>2H', velocity, radius))
     self.sci.drive(*bytes)
 
