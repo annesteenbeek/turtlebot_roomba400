@@ -81,7 +81,7 @@ class TurtlebotGyro():
         self.imu_pub.publish(self.imu_data)
         self.imu_pub_raw.publish(self.imu_data)
         return # only send phone imu data
-
+        
         current_time = sensor_state.header.stamp
         dt = (current_time - last_time).to_sec()
         past_orientation = self.orientation
@@ -91,13 +91,7 @@ class TurtlebotGyro():
         self.imu_data.angular_velocity.z = -1.0*self.imu_data.angular_velocity.z
         self.orientation += self.imu_data.angular_velocity.z * dt
         #print orientation
-        (self.imu_data.orientation.x, 
-            self.imu_data.orientation.y,
-            self.imu_data.orientation.z, 
-            self.imu_data.orientation.w) = 
-        PyKDL.Rotation.RotZ(self.orientation).GetQuaternion()
-
-        # publish calculated IMU data
+        (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w) = PyKDL.Rotation.RotZ(self.orientation).GetQuaternion()
         self.imu_pub.publish(self.imu_data)
 
         self.imu_data.header.stamp =  sensor_state.header.stamp
@@ -107,8 +101,6 @@ class TurtlebotGyro():
         raw_orientation = past_orientation + self.imu_data.angular_velocity.z * dt
         #print orientation
         (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w) = PyKDL.Rotation.RotZ(raw_orientation).GetQuaternion()
-
-        # publish raw imu data
         self.imu_pub_raw.publish(self.imu_data)
 
     def phone_callback(self, phone_imu):
