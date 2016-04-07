@@ -349,9 +349,9 @@ class Roomba(object):
         radius = WHEEL_SEPARATION * (v_left + v_right)/(2*(v_right - v_left))
         self.msg.requested_radius = float(radius) / 1000
         self.drive(velocity, radius)
-    self.msg.requested_velocity = float(velocity) / 1000
-    self.msg.requested_right_velocity = float(v_right) / 1000
-    self.msg.requested_left_velocity = float(v_left) / 1000 
+    self.msg.requested_velocity = 10 #float(velocity) / 1000
+    self.msg.requested_right_velocity = 10 #float(v_right) / 1000
+    self.msg.requested_left_velocity = 10 #float(v_left) / 1000 
     
   def drive(self, velocity, radius):
     """controls Roomba's drive wheels.
