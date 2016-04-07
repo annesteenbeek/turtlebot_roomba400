@@ -465,7 +465,7 @@ class TurtlebotNode(object):
 
         # On startup, Create can report junk readings
         if abs(sensor_state.distance) > 1.0 or abs(sensor_state.angle) > 1.0:
-            raise Exception("Distance, angle displacement too big, invalid readings from robot. Distance: %.2f, Angle: %.2f" % (sensor_state.distance, sensor_state.angle))
+            # raise Exception("Distance, angle displacement too big, invalid readings from robot. Distance: %.2f, Angle: %.2f" % (sensor_state.distance, sensor_state.angle))
 
         # this is really delta_distance, delta_angle
         d  = sensor_state.distance * self.odom_linear_scale_correction #correction factor from calibration
