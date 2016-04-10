@@ -213,7 +213,7 @@ class SerialCommandInterface(object):
   def __init__(self, tty, baudrate):
     # rospy.init_node('serial_interface', log_level=rospy.DEBUG)
     self.ser = serial.Serial(tty, baudrate=baudrate, timeout=SERIAL_TIMEOUT)
-    self.wake()
+    # self.wake()
     self.opcodes = {}
 
     #TODO: kwc all locking code should be outside of the driver. Instead,
