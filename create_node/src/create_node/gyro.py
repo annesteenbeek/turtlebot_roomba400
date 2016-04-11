@@ -83,7 +83,7 @@ class TurtlebotGyro():
         # if self.cal_offset == 0:
         #     return
         if self.phone_imu_on:
-            self.imu_data.header.stamp = self.phone_imu.header.stamp
+            self.imu_data.header.stamp = sensor_state.header.stamp # use sensor time
             self.imu_data.angular_velocity.z = self.phone_imu.angular_velocity.z
             self.imu_data.orientation = self.phone_imu.orientation
 
